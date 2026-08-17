@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - app-network
+
+  app:
+    build: .
+    container_name: inscripciones-app
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
+      - SPRING_RABBITMQ_USERNAME=guest
+      - SPRING_RABBITMQ_PASSWORD=guest
+      - AWS_S3_BUCKET_NAME=duoc-inscripciones-bucket-cristian-olivares
+      - AWS_REGION=us-east-1
+      # AQUI PONEMOS LAS CREDENCIALES FRESCAS QUE TE DIO AWS ACADEMY
+      - AWS_ACCESS_KEY_ID=PON_AQUI_EL_KEY_ID
+      - AWS_SECRET_ACCESS_KEY=PON_AQUI_LA_SECRET_KEY
+      - AWS_SESSION_TOKEN=PON_AQUI_EL_TOKEN_COMPLETO
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
